@@ -1,0 +1,47 @@
+﻿@typeparam Titem
+
+@if (Listado is null)
+{
+    @if (Cargando is null)
+    {
+        <p>Cargando las películas...</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif?20170503175831" />
+    }
+    else
+    {
+        @Cargando
+    }
+}
+else if (Listado.Count == 0)
+{
+    @if (NoHayRegistros is null)
+    {
+        <p>No hay películas para mostrar.</p>
+    }
+    else
+    {
+        @NoHayRegistros
+    }
+}
+else
+{
+    @foreach (var elemento in Listado)
+    {
+        @HayRegistros(elemento)
+    }
+}
+
+@code {
+    [Parameter]
+    public RenderFragment Cargando { get; set; } = null!;
+
+    [Parameter]
+    public RenderFragment NoHayRegistros { get; set; } = null!;
+
+    [Parameter]
+    public RenderFragment<Titem> HayRegistros { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]    // Para que sea requerido
+    public List<Titem> Listado { get; set; } = null!;   // Con esto tenemos un listado genérico
+}

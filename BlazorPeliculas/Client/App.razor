@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Services;
+@using System.Reflection;
+@inject LazyAssemblyLoader lazyLoader
+
+<Router AppAssembly="@typeof(App).Assembly" 
+    OnNavigateAsync="OnNavigateAssync" AdditionalAssemblies="assemblies">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Ruta no existe</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Lo sentimos, esta ruta no existe.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code{
+    private List<Assembly> assemblies = new List<Assembly>();  // Para traer un listado de dlls que vamos a cargar
+
+    private async Task OnNavigateAssync(NavigationContext args)
+    {
+        if (args.Path.EndsWith("counter")) // Preguntamos si la página donde estamos termina en counter
+        {
+            var assenbliesCargados = await lazyLoader.LoadAssembliesAsync(new List<string> { "MathNet.Numerics.dll" });
+
+            assemblies.AddRange(assenbliesCargados);
+        }
+    }
+}

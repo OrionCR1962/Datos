@@ -1,0 +1,35 @@
+﻿<h3>BindAfterDemo</h3>
+
+<input type="text" @bind="busqueda" @bind:after="Buscar" />
+
+<p>
+    Personas encontradas:
+</p>
+
+<ul>
+    @foreach(var persona in personasEncontradas)
+    {
+        <li>@persona</li>
+    }
+</ul>
+
+@code {
+    private string busqueda = string.Empty;
+    private List<string> personasEncontradas = new List<string>();
+
+    private async Task Buscar()
+    {
+        var personas = new List<string>
+        {
+            "Felipe Gavilan",
+            "Feclipe Díaz",
+            "Claudia Rodríguez",
+            "Claudia Celeste"
+        };
+
+        await Task.Delay(1000);  // Un segundo, es solo para simular una espera
+
+        personasEncontradas = personas.Where(p => p.Contains(busqueda)).ToList();
+        // Utilizamos linq para recorrer el listado y localizar a los nombres parecidos.
+    }
+}
